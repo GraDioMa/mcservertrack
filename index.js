@@ -9,6 +9,7 @@ const CHECK_INTERVAL = 30 * 1000;        // 30s (adjust as you like)
 // ==================
 
 let lastPlayers = new Set();
+let statusMessageId = null; // store ID of the status message
 
 async function sendToDiscord(message) {
     try {
@@ -22,6 +23,34 @@ async function sendToDiscord(message) {
     }
 }
 
+async function editStatusMessage(message) {
+    if (!statusMessageId) {
+        // Send initial message if we don’t have an ID yet
+        try {
+            const res = await fetch(WEBHOOK_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ content: message })
+            });
+            const data = await res.json();
+            statusMessageId = data.id;
+        } catch (err) {
+            console.error("Failed to send initial status message:", err);
+        }
+    } else {
+        // Edit existing message
+        try {
+            await fetch(`${WEBHOOK_URL}/messages/${statusMessageId}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ content: message })
+            });
+        } catch (err) {
+            console.error("Failed to edit status message:", err);
+        }
+    }
+}
+
 async function checkServer() {
     try {
         const result = await status(SERVER_HOST, SERVER_PORT, { enableSRV: true });
@@ -30,29 +59,30 @@ async function checkServer() {
         const joined = [...onlinePlayers].filter(p => !lastPlayers.has(p));
         const left = [...lastPlayers].filter(p => !onlinePlayers.has(p));
 
+        // Send join messages
         for (const p of joined) {
             await sendToDiscord(`➡️ **${p}** joined. Online: ${onlinePlayers.size}`);
         }
 
+        // Send leave messages
         for (const p of left) {
             await sendToDiscord(`⬅️ **${p}** left. Online: ${onlinePlayers.size}`);
         }
 
+        // Update the status message
         const playerList = [...onlinePlayers].join(", ") || "None";
-        await sendToDiscord(
-            `🌍 **Server Status**: 🟢 Online\n👥 **Players Online**: ${onlinePlayers.size}\n📋 **Player List**: ${playerList}`
-        );
+        const statusText = `🌍 **Server Status**: 🟢 Online\n👥 **Players Online**: ${onlinePlayers.size}\n📋 **Player List**: ${playerList}`;
+        await editStatusMessage(statusText);
 
         lastPlayers = onlinePlayers;
 
     } catch (err) {
         console.error("Error querying server:", err);
-        await sendToDiscord("❌ Server appears offline/unreachable.");
+        const statusText = "❌ Server appears offline/unreachable.";
+        await editStatusMessage(statusText);
         lastPlayers = new Set();
     }
 }
 
 setInterval(checkServer, CHECK_INTERVAL);
 checkServer();
-
-
