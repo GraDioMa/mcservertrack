@@ -1,0 +1,14 @@
+{
+  "name": "mc-monitor",
+  "version": "1.0.0",
+  "description": "Minecraft server monitor with Discord webhook",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "minecraft-server-util": "^5.2.0",
+    "node-fetch": "^3.3.2"
+  }
+}
