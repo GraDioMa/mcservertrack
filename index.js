@@ -4,7 +4,7 @@ import fetch from "node-fetch";
 // ===== CONFIG =====
 const SERVER_HOST = "2a02:a302:0:1::10"; // Your IPv6 or hostname
 const SERVER_PORT = 25565;               // Change if needed
-const WEBHOOK_URL = "https://discord.com/api/webhooks/..."; // Your webhook
+const WEBHOOK_URL = "https://discord.com/api/webhooks/1407666486905929808/RKsMMZKif7WFV5H2ziqGmS4HsKZ54xhVWzEcnv8uqsAOY48j18mrjrV31UdeEJFMAibr"; // Your webhook
 const CHECK_INTERVAL = 30 * 1000;        // 30s (adjust as you like)
 // ==================
 
@@ -54,3 +54,4 @@ async function checkServer() {
 
 setInterval(checkServer, CHECK_INTERVAL);
 checkServer();
+
