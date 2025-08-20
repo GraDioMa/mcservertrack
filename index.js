@@ -27,7 +27,7 @@ async function editStatusMessage(message) {
     if (!statusMessageId) {
         // Send initial message if we don’t have an ID yet
         try {
-            const res = await fetch(WEBHOOK_URL, {
+            const res = await fetch(`${WEBHOOK_URL}?wait=true`, { // ← add ?wait=true
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ content: message })
@@ -86,3 +86,4 @@ async function checkServer() {
 
 setInterval(checkServer, CHECK_INTERVAL);
 checkServer();
+
