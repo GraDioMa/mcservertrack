@@ -27,13 +27,20 @@ async function editStatusMessage(message) {
     if (!statusMessageId) {
         // Send initial message if we don’t have an ID yet
         try {
-            const res = await fetch(`${WEBHOOK_URL}?wait=true`, { // ← add ?wait=true
+            const res = await fetch(`${WEBHOOK_URL}?wait=true`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ content: message })
             });
-            const data = await res.json();
-            statusMessageId = data.id;
+
+            // Only parse JSON if content exists
+            let data;
+            try {
+                data = await res.json();
+                statusMessageId = data.id;
+            } catch {
+                console.warn("Webhook did not return JSON; status message ID not saved.");
+            }
         } catch (err) {
             console.error("Failed to send initial status message:", err);
         }
@@ -86,4 +93,5 @@ async function checkServer() {
 
 setInterval(checkServer, CHECK_INTERVAL);
 checkServer();
+
 
