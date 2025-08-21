@@ -87,9 +87,18 @@ async function checkServer() {
         }
 
         // Update the status message
+        // Inside checkServer(), where statusText is created:
         const playerList = [...onlinePlayers].join(", ") || "None";
-        const statusText = `🌍 **Server Status**: 🟢 Online\n👥 **Players Online**: ${onlinePlayers.size}\n📋 **Player List**: ${playerList}`;
-        await editStatusMessage(statusText);
+
+        // Format timestamp (HH:MM:SS)
+        const now = new Date();
+        const timeString = now.toLocaleTimeString();
+
+        const statusText =
+          `🌍 **Server Status**: 🟢 Online\n` +
+          `👥 **Players Online**: ${onlinePlayers.size}\n` +
+          `📋 **Player List**: ${playerList}\n` +
+          `⏱️ **Last Checked**: ${timeString}`;        await editStatusMessage(statusText);
 
         lastPlayers = onlinePlayers;
 
@@ -103,6 +112,7 @@ async function checkServer() {
 
 setInterval(checkServer, CHECK_INTERVAL);
 checkServer();
+
 
 
 
