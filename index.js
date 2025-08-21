@@ -1,11 +1,38 @@
 import { status } from "minecraft-server-util";
 import fetch from "node-fetch";
+import http from "http";
 // ===== CONFIG =====
 const SERVER_HOST = "83.168.106.219"; // Your IPv6 or hostname
 const SERVER_PORT = 25807;               // Change if needed
 const WEBHOOK_URL = "https://discord.com/api/webhooks/1407666486905929808/RKsMMZKif7WFV5H2ziqGmS4HsKZ54xhVWzEcnv8uqsAOY48j18mrjrV31UdeEJFMAibr"; // Your webhook
 const CHECK_INTERVAL = 30 * 1000;        // 30s (adjust as you like)
-// ==================
+const PORT = process.env. PORT || 3000; //
+
+Render will expect this
+
+// ==
+
+let lastPlayers = new Set();
+
+let statusMessageId = null;
+
+// --- keep Render alive with a tiny web
+
+server
+
+http.createServer((req, res) => { res.writeHead(200, { "Content-Type":
+
+"text/plain" });
+
+res.end("Bot is running!\n");
+
+}).listen(PORT, () =>
+
+console.log(HTTP server running on port
+
+${PORT});
+
+});
 
 let lastPlayers = new Set();
 let statusMessageId = null; // store ID of the status message
@@ -101,6 +128,7 @@ async function checkServer() {
 
 setInterval(checkServer, CHECK_INTERVAL);
 checkServer();
+
 
 
 
