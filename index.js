@@ -1,6 +1,16 @@
 import { status } from "minecraft-server-util";
 import fetch from "node-fetch";
+const express = require('express')
+const app = express()
+const port = process.env.PORT || 4000
 
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
 // ===== CONFIG =====
 const SERVER_HOST = "83.168.106.219"; // Your IPv6 or hostname
 const SERVER_PORT = 25807;               // Change if needed
@@ -93,5 +103,6 @@ async function checkServer() {
 
 setInterval(checkServer, CHECK_INTERVAL);
 checkServer();
+
 
 
